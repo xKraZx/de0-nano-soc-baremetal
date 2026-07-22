@@ -4,6 +4,8 @@ QPF := $(PRJ).qpf
 QSF := $(PRJ).qsys
 QSD := $(PRJ)
 
+JIC_FILE		:= $(PRJ).jic
+COF_FILE		:= $(PRJ).cof
 QIP_FILE  		:= $(QSD)/synthesis/$(PRJ).qip
 SOF_FILE  		:= $(PRJ).sof
 SOPC_FILE 		:= $(PRJ).sopcinfo
@@ -22,11 +24,13 @@ CMD_MKDIR := mkdir -p
 SRC = ${PRJ}_top.v
 
 .PHONY: all
-all: blob rbf quartus_generate headers
+all: blob rbf quartus_generate headers jic
 
 .PHONY: rbf
 rbf: $(RBF_FILE)
 
+.PHONY: jic
+jic: $(JIC_FILE)
 
 .PHONY: quartus_edit
 quartus_edit:
@@ -84,6 +88,9 @@ $(SOPC_FILE): $(QIP_FILE)
 $(SOF_FILE): $(QIP_FILE) $(SRC)
 	quartus_sh --flow compile  $(QPF)
 
+$(JIC_FILE): $(COF_FILE) $(SOF_FILE)
+	quartus_cpf -c $(COF_FILE)
+
 .PHONY: stage_tftp
 stage_tftp:$(RBF_FILE) $(DTB_FILE)
 	cp $(RBF_FILE) $(TFTP_ROOT)/socfpga.rbf
@@ -104,6 +111,7 @@ clean:
 			$(DTB_FILE) \
 			$(H_DIR)\
 			$(RBF_FILE)\
+			$(JIC_FILE) \
 			*.rpt \
 			*.done \
 			*.smsg \
@@ -114,7 +122,8 @@ clean:
 			*.pin \
 			*.qws \
 			*.sld \
-			*.jdi 
+			*.jdi \
+			*.map
 
 
 
