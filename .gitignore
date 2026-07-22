@@ -1,0 +1,34 @@
+# Quartus generated files
+hw/*.rpt
+hw/*.summary
+hw/*.smsg
+hw/*.map
+hw/*.done
+hw/*.dtb
+hw/*.jdi
+hw/*.jic
+hw/*.pin
+hw/*.rbf
+hw/*.sld
+hw/*.sof
+hw/*.sopcinfo
+hw/*.bak
+hw/*.htm
+hw/*.qws
+hw/*.sdl
+hw/*.qdf
+
+# Quartus generated directories
+hw/db/
+hw/incremental_db/
+hw/qsys_headers/
+hw/hps_isw_handoff/
+hw/DE0_HPS_Example/
+
+# Misc
+hw/c5_pin_model_dump.txt
+hw/hps_sdram_p0_all_pins.txt
+hw/hps_sdram_p0_summary.csv
+hw/.qsys_edit
+sw/temp/
+sdcard.img
