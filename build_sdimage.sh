@@ -1,7 +1,14 @@
 #!/bin/bash
 set -e
 
-export QUARTUS_ROOTDIR=/root/intelFPGA_lite/18.1/quartus/
+if [ -z "$QUARTUS_ROOTDIR" ]; then
+    echo "----- QUARTUS_ROOTDIR is not set:"
+    echo "----- export QUARTUS_ROOTDIR=/path/to/your/quartus/dir/---/quartus/"
+    exit 1
+fi
+
+export PATH="$QUARTUS_ROOTDIR/bin:$QUARTUS_ROOTDIR/sopc_builder/bin:$PATH"
+
 
 echo "Preparing files HW..."
 make QUARTUS_ROOTDIR=$QUARTUS_ROOTDIR -C hw all
