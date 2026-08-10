@@ -23,9 +23,6 @@ set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
 
 set_global_assignment -name CYCLONEII_RESERVE_NCEO_AFTER_CONFIGURATION "USE AS REGULAR IO"
 
-set_global_assignment -name VERILOG_FILE DE0_HPS_Example_top.v
-set_global_assignment -name SDC_FILE DE0_HPS_Example.SDC
-set_global_assignment -name QIP_FILE DE0_HPS_Example/synthesis/DE0_HPS_Example.qip
 
 
 set_global_assignment -name USE_DLL_FREQUENCY_FOR_DQS_DELAY_CHAIN ON
@@ -107,21 +104,6 @@ set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to SW[0]
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to SW[1]
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to SW[2]
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to SW[3]
-
-
-#============================================================
-# SPI
-#============================================================
-set_location_assignment PIN_Y15  -to SPI_MISO # GPIO_1[0]
-set_location_assignment PIN_AG28 -to SPI_MOSI # GPIO_1[1]
-set_location_assignment PIN_AA15 -to SPI_SCLK # GPIO_1[2]
-set_location_assignment PIN_AH27 -to SPI_SS_N # GPIO_1[3]
-
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to SPI_MISO
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to SPI_MOSI
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to SPI_SCLK
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to SPI_SS_N
-
 
 
 
@@ -510,4 +492,8 @@ set_instance_assignment -name ENABLE_BENEFICIAL_SKEW_OPTIMIZATION_FOR_NON_GLOBAL
 set_instance_assignment -name PLL_COMPENSATION_MODE DIRECT -to u0|hps_0|hps_io|border|hps_sdram_inst|pll0|fbout -tag __hps_sdram_p0
 
 
+
+set_global_assignment -name VERILOG_FILE DE0_HPS_Example_top.v
+set_global_assignment -name SDC_FILE DE0_HPS_Example.SDC
+set_global_assignment -name QIP_FILE DE0_HPS_Example/synthesis/DE0_HPS_Example.qip
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

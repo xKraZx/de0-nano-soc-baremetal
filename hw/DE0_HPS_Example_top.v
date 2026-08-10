@@ -74,13 +74,7 @@ module DE0_HPS_Example_top(
 
 
    /////// SWITCHES  ////////
-   input   wire     [3:0]      SW,
-
-   /////////// SPI //////////             // mapped to 
-   input   wire                SPI_MISO,  // GPIO_1[0]
-   output  wire                SPI_MOSI,  // GPIO_1[1]
-   output  wire                SPI_SCLK,  // GPIO_1[2]
-   output  wire                SPI_SS_N   // GPIO_1[3]
+   input   wire     [3:0]      SW
 );
 
 
@@ -96,7 +90,10 @@ wire h2f_reset;
 wire warm_reset_hs_ack;
 wire warm_reset_hs_req;
 
-
+wire [31:0] reg_loop;
+wire [6:0] led;
+reg led_int;
+reg [25:0] counter;
 //=======================================================
 //  Structural coding
 //=======================================================
@@ -113,6 +110,22 @@ assign hps_debug_reset   = 1'b0;
 
 // A warm-reset on the hps-side shall also reset the FPGA part
 assign reset = hps_warm_reset;
+assign LED = {led, led_int};
+
+always @(posedge FPGA_CLK1_50) begin
+	if (reset) begin
+		counter <= 26'd0;
+		led_int <= 1'd0;
+	end else begin
+		if (counter == 26'd24_999_999) begin
+			counter <= 26'd0;
+			led_int <= ~led_int;      // toggle LED
+		end
+		else begin
+			counter <= counter + 1'b1;
+		end
+	end
+end
 
 DE0_HPS_Example u0 (
         .clk_clk                         ( FPGA_CLK1_50        ), //   clk.clk
@@ -191,14 +204,11 @@ DE0_HPS_Example u0 (
         .hps_io_hps_io_gpio_inst_GPIO61  ( HPS_GSENSOR_INT     ), //    hps_io_gpio_inst_GPIO61
 
 
-        .led_out_export                  ( LED                 ), //    led_out.export
+        .led_out_export                  ( led                 ), //    led_out.export
         .sw_in_export                    ( SW                  ), //    sw_in.export
         .pb_in_export                    ( KEY                 ), //    pb_in.export
-
-        .spi_MISO                        ( SPI_MISO            ), //    spi.MISO
-        .spi_MOSI                        ( SPI_MOSI            ), //    spi.MOSI
-        .spi_SCLK                        ( SPI_SCLK            ), //    spi.SCLK
-        .spi_SS_n                        ( SPI_SS_N            ), //    spi.SS_n
+		  .reg_32_external_connection_in_port (reg_loop),
+		  .reg_32_external_connection_out_port (reg_loop),
 
         .warm_reset_handshake_h2f_pending_rst_req_n ( ~warm_reset_hs_req ), // h2f_pending_rst_req_n
         .warm_reset_handshake_f2h_pending_rst_ack_n ( ~warm_reset_hs_ack )  // .f2h_pending_rst_ack_n

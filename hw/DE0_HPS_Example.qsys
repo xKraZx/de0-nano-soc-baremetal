@@ -21,24 +21,8 @@
    {
       datum _sortIndex
       {
-         value = "10";
+         value = "8";
          type = "int";
-      }
-   }
-   element h2f_axi_master_bridge
-   {
-      datum _sortIndex
-      {
-         value = "4";
-         type = "int";
-      }
-   }
-   element h2f_axi_master_bridge.s0
-   {
-      datum baseAddress
-      {
-         value = "0";
-         type = "String";
       }
    }
    element hps_0
@@ -69,7 +53,7 @@
    {
       datum _sortIndex
       {
-         value = "5";
+         value = "4";
          type = "int";
       }
    }
@@ -85,8 +69,24 @@
    {
       datum _sortIndex
       {
-         value = "7";
+         value = "6";
          type = "int";
+      }
+   }
+   element reg32_pio
+   {
+      datum _sortIndex
+      {
+         value = "9";
+         type = "int";
+      }
+   }
+   element reg32_pio.s1
+   {
+      datum baseAddress
+      {
+         value = "96";
+         type = "String";
       }
    }
    element sdram_jtag_bridge
@@ -97,19 +97,11 @@
          type = "int";
       }
    }
-   element spi_0
-   {
-      datum _sortIndex
-      {
-         value = "9";
-         type = "int";
-      }
-   }
    element sw_pio
    {
       datum _sortIndex
       {
-         value = "6";
+         value = "5";
          type = "int";
       }
    }
@@ -125,7 +117,7 @@
    {
       datum _sortIndex
       {
-         value = "8";
+         value = "7";
          type = "int";
       }
    }
@@ -174,8 +166,12 @@
    internal="pb_pio.external_connection"
    type="conduit"
    dir="end" />
+ <interface
+   name="reg_32_external_connection"
+   internal="reg32_pio.external_connection"
+   type="conduit"
+   dir="end" />
  <interface name="reset" internal="clk_0.clk_in_reset" type="reset" dir="end" />
- <interface name="spi" internal="spi_0.external" type="conduit" dir="end" />
  <interface
    name="sw_in"
    internal="sw_pio.external_connection"
@@ -186,7 +182,7 @@
    internal="hps_0.h2f_warm_reset_handshake"
    type="conduit"
    dir="end" />
- <module name="clk_0" kind="clock_source" version="16.1" enabled="1">
+ <module name="clk_0" kind="clock_source" version="18.1" enabled="1">
   <parameter name="clockFrequency" value="50000000" />
   <parameter name="clockFrequencyKnown" value="true" />
   <parameter name="inputClockFrequency" value="0" />
@@ -195,7 +191,7 @@
  <module
    name="fpga_jtag_bridge"
    kind="altera_jtag_avalon_master"
-   version="16.1"
+   version="18.1"
    enabled="1">
   <parameter name="AUTO_DEVICE" value="5CSEMA4U23C6" />
   <parameter name="AUTO_DEVICE_FAMILY" value="Cyclone V" />
@@ -206,25 +202,7 @@
   <parameter name="PLI_PORT" value="50000" />
   <parameter name="USE_PLI" value="0" />
  </module>
- <module
-   name="h2f_axi_master_bridge"
-   kind="altera_avalon_mm_bridge"
-   version="16.1"
-   enabled="1">
-  <parameter name="ADDRESS_UNITS" value="SYMBOLS" />
-  <parameter name="ADDRESS_WIDTH" value="10" />
-  <parameter name="DATA_WIDTH" value="32" />
-  <parameter name="LINEWRAPBURSTS" value="0" />
-  <parameter name="MAX_BURST_SIZE" value="1" />
-  <parameter name="MAX_PENDING_RESPONSES" value="4" />
-  <parameter name="PIPELINE_COMMAND" value="1" />
-  <parameter name="PIPELINE_RESPONSE" value="1" />
-  <parameter name="SYMBOL_WIDTH" value="8" />
-  <parameter name="SYSINFO_ADDR_WIDTH" value="7" />
-  <parameter name="USE_AUTO_ADDRESS_WIDTH" value="0" />
-  <parameter name="USE_RESPONSE" value="0" />
- </module>
- <module name="hps_0" kind="altera_hps" version="16.1" enabled="1">
+ <module name="hps_0" kind="altera_hps" version="18.1" enabled="1">
   <parameter name="ABSTRACT_REAL_COMPARE_TEST" value="false" />
   <parameter name="ABS_RAM_MEM_INIT_FILENAME" value="meminit" />
   <parameter name="ACV_PHY_CLK_ADD_FR_PHASE" value="0.0" />
@@ -336,7 +314,7 @@
   <parameter name="F2SCLK_WARMRST_Enable" value="false" />
   <parameter name="F2SDRAM_Type">Avalon-MM Bidirectional</parameter>
   <parameter name="F2SDRAM_Width" value="256" />
-  <parameter name="F2SINTERRUPT_Enable" value="true" />
+  <parameter name="F2SINTERRUPT_Enable" value="false" />
   <parameter name="F2S_Width" value="1" />
   <parameter name="FIX_READ_LATENCY" value="8" />
   <parameter name="FORCED_NON_LDC_ADDR_CMD_MEM_CK_INVERT" value="false" />
@@ -757,7 +735,7 @@
  <module
    name="hps_jtag_bridge"
    kind="altera_jtag_avalon_master"
-   version="16.1"
+   version="18.1"
    enabled="1">
   <parameter name="AUTO_DEVICE" value="5CSEMA4U23C6" />
   <parameter name="AUTO_DEVICE_FAMILY" value="Cyclone V" />
@@ -768,7 +746,7 @@
   <parameter name="PLI_PORT" value="50000" />
   <parameter name="USE_PLI" value="0" />
  </module>
- <module name="led_pio" kind="altera_avalon_pio" version="16.1" enabled="1">
+ <module name="led_pio" kind="altera_avalon_pio" version="18.1" enabled="1">
   <parameter name="bitClearingEdgeCapReg" value="false" />
   <parameter name="bitModifyingOutReg" value="false" />
   <parameter name="captureEdge" value="false" />
@@ -780,9 +758,9 @@
   <parameter name="resetValue" value="0" />
   <parameter name="simDoTestBenchWiring" value="false" />
   <parameter name="simDrivenValue" value="0" />
-  <parameter name="width" value="8" />
+  <parameter name="width" value="7" />
  </module>
- <module name="pb_pio" kind="altera_avalon_pio" version="16.1" enabled="1">
+ <module name="pb_pio" kind="altera_avalon_pio" version="18.1" enabled="1">
   <parameter name="bitClearingEdgeCapReg" value="false" />
   <parameter name="bitModifyingOutReg" value="false" />
   <parameter name="captureEdge" value="false" />
@@ -796,10 +774,24 @@
   <parameter name="simDrivenValue" value="0" />
   <parameter name="width" value="2" />
  </module>
+ <module name="reg32_pio" kind="altera_avalon_pio" version="18.1" enabled="1">
+  <parameter name="bitClearingEdgeCapReg" value="false" />
+  <parameter name="bitModifyingOutReg" value="false" />
+  <parameter name="captureEdge" value="false" />
+  <parameter name="clockRate" value="50000000" />
+  <parameter name="direction" value="InOut" />
+  <parameter name="edgeType" value="RISING" />
+  <parameter name="generateIRQ" value="false" />
+  <parameter name="irqType" value="LEVEL" />
+  <parameter name="resetValue" value="0" />
+  <parameter name="simDoTestBenchWiring" value="false" />
+  <parameter name="simDrivenValue" value="0" />
+  <parameter name="width" value="32" />
+ </module>
  <module
    name="sdram_jtag_bridge"
    kind="altera_jtag_avalon_master"
-   version="16.1"
+   version="18.1"
    enabled="1">
   <parameter name="AUTO_DEVICE" value="5CSEMA4U23C6" />
   <parameter name="AUTO_DEVICE_FAMILY" value="Cyclone V" />
@@ -810,23 +802,7 @@
   <parameter name="PLI_PORT" value="50000" />
   <parameter name="USE_PLI" value="0" />
  </module>
- <module name="spi_0" kind="altera_avalon_spi" version="16.1" enabled="1">
-  <parameter name="avalonSpec" value="2.0" />
-  <parameter name="clockPhase" value="0" />
-  <parameter name="clockPolarity" value="0" />
-  <parameter name="dataWidth" value="8" />
-  <parameter name="disableAvalonFlowControl" value="false" />
-  <parameter name="inputClockRate" value="50000000" />
-  <parameter name="insertDelayBetweenSlaveSelectAndSClk" value="false" />
-  <parameter name="insertSync" value="false" />
-  <parameter name="lsbOrderedFirst" value="false" />
-  <parameter name="masterSPI" value="true" />
-  <parameter name="numberOfSlaves" value="1" />
-  <parameter name="syncRegDepth" value="2" />
-  <parameter name="targetClockRate" value="128000" />
-  <parameter name="targetSlaveSelectToSClkDelay" value="0.0" />
- </module>
- <module name="sw_pio" kind="altera_avalon_pio" version="16.1" enabled="1">
+ <module name="sw_pio" kind="altera_avalon_pio" version="18.1" enabled="1">
   <parameter name="bitClearingEdgeCapReg" value="false" />
   <parameter name="bitModifyingOutReg" value="false" />
   <parameter name="captureEdge" value="false" />
@@ -843,23 +819,23 @@
  <module
    name="sysid_qsys_0"
    kind="altera_avalon_sysid_qsys"
-   version="16.1"
+   version="18.1"
    enabled="1">
   <parameter name="id" value="1193046" />
  </module>
  <connection
    kind="avalon"
-   version="16.1"
-   start="hps_0.h2f_lw_axi_master"
-   end="h2f_axi_master_bridge.s0">
+   version="18.1"
+   start="hps_0.h2f_axi_master"
+   end="reg32_pio.s1">
   <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x0000" />
+  <parameter name="baseAddress" value="0x00010000" />
   <parameter name="defaultConnection" value="false" />
  </connection>
  <connection
    kind="avalon"
-   version="16.1"
-   start="h2f_axi_master_bridge.m0"
+   version="18.1"
+   start="hps_0.h2f_lw_axi_master"
    end="sysid_qsys_0.control_slave">
   <parameter name="arbitrationPriority" value="1" />
   <parameter name="baseAddress" value="0x0030" />
@@ -867,8 +843,8 @@
  </connection>
  <connection
    kind="avalon"
-   version="16.1"
-   start="h2f_axi_master_bridge.m0"
+   version="18.1"
+   start="hps_0.h2f_lw_axi_master"
    end="led_pio.s1">
   <parameter name="arbitrationPriority" value="1" />
   <parameter name="baseAddress" value="0x0010" />
@@ -876,8 +852,8 @@
  </connection>
  <connection
    kind="avalon"
-   version="16.1"
-   start="h2f_axi_master_bridge.m0"
+   version="18.1"
+   start="hps_0.h2f_lw_axi_master"
    end="sw_pio.s1">
   <parameter name="arbitrationPriority" value="1" />
   <parameter name="baseAddress" value="0x0000" />
@@ -885,8 +861,8 @@
  </connection>
  <connection
    kind="avalon"
-   version="16.1"
-   start="h2f_axi_master_bridge.m0"
+   version="18.1"
+   start="hps_0.h2f_lw_axi_master"
    end="pb_pio.s1">
   <parameter name="arbitrationPriority" value="1" />
   <parameter name="baseAddress" value="0x0020" />
@@ -894,16 +870,7 @@
  </connection>
  <connection
    kind="avalon"
-   version="16.1"
-   start="h2f_axi_master_bridge.m0"
-   end="spi_0.spi_control_port">
-  <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x0040" />
-  <parameter name="defaultConnection" value="false" />
- </connection>
- <connection
-   kind="avalon"
-   version="16.1"
+   version="18.1"
    start="fpga_jtag_bridge.master"
    end="sysid_qsys_0.control_slave">
   <parameter name="arbitrationPriority" value="1" />
@@ -912,7 +879,7 @@
  </connection>
  <connection
    kind="avalon"
-   version="16.1"
+   version="18.1"
    start="hps_jtag_bridge.master"
    end="hps_0.f2h_axi_slave">
   <parameter name="arbitrationPriority" value="1" />
@@ -921,7 +888,7 @@
  </connection>
  <connection
    kind="avalon"
-   version="16.1"
+   version="18.1"
    start="sdram_jtag_bridge.master"
    end="hps_0.f2h_sdram0_data">
   <parameter name="arbitrationPriority" value="1" />
@@ -930,7 +897,7 @@
  </connection>
  <connection
    kind="avalon"
-   version="16.1"
+   version="18.1"
    start="fpga_jtag_bridge.master"
    end="sw_pio.s1">
   <parameter name="arbitrationPriority" value="1" />
@@ -939,7 +906,7 @@
  </connection>
  <connection
    kind="avalon"
-   version="16.1"
+   version="18.1"
    start="fpga_jtag_bridge.master"
    end="led_pio.s1">
   <parameter name="arbitrationPriority" value="1" />
@@ -948,115 +915,93 @@
  </connection>
  <connection
    kind="avalon"
-   version="16.1"
+   version="18.1"
    start="fpga_jtag_bridge.master"
    end="pb_pio.s1">
   <parameter name="arbitrationPriority" value="1" />
   <parameter name="baseAddress" value="0x0020" />
   <parameter name="defaultConnection" value="false" />
  </connection>
- <connection
-   kind="avalon"
-   version="16.1"
-   start="fpga_jtag_bridge.master"
-   end="spi_0.spi_control_port">
-  <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x0040" />
-  <parameter name="defaultConnection" value="false" />
- </connection>
- <connection kind="clock" version="16.1" start="clk_0.clk" end="led_pio.clk" />
- <connection kind="clock" version="16.1" start="clk_0.clk" end="sw_pio.clk" />
- <connection kind="clock" version="16.1" start="clk_0.clk" end="sysid_qsys_0.clk" />
+ <connection kind="clock" version="18.1" start="clk_0.clk" end="led_pio.clk" />
+ <connection kind="clock" version="18.1" start="clk_0.clk" end="sw_pio.clk" />
+ <connection kind="clock" version="18.1" start="clk_0.clk" end="sysid_qsys_0.clk" />
  <connection
    kind="clock"
-   version="16.1"
-   start="clk_0.clk"
-   end="h2f_axi_master_bridge.clk" />
- <connection
-   kind="clock"
-   version="16.1"
+   version="18.1"
    start="clk_0.clk"
    end="fpga_jtag_bridge.clk" />
  <connection
    kind="clock"
-   version="16.1"
+   version="18.1"
    start="clk_0.clk"
    end="hps_jtag_bridge.clk" />
  <connection
    kind="clock"
-   version="16.1"
+   version="18.1"
    start="clk_0.clk"
    end="sdram_jtag_bridge.clk" />
- <connection kind="clock" version="16.1" start="clk_0.clk" end="pb_pio.clk" />
- <connection kind="clock" version="16.1" start="clk_0.clk" end="spi_0.clk" />
+ <connection kind="clock" version="18.1" start="clk_0.clk" end="pb_pio.clk" />
+ <connection kind="clock" version="18.1" start="clk_0.clk" end="reg32_pio.clk" />
  <connection
    kind="clock"
-   version="16.1"
+   version="18.1"
    start="clk_0.clk"
    end="hps_0.f2h_axi_clock" />
  <connection
    kind="clock"
-   version="16.1"
+   version="18.1"
    start="clk_0.clk"
    end="hps_0.f2h_sdram0_clock" />
  <connection
    kind="clock"
-   version="16.1"
+   version="18.1"
    start="clk_0.clk"
    end="hps_0.h2f_axi_clock" />
  <connection
    kind="clock"
-   version="16.1"
+   version="18.1"
    start="clk_0.clk"
    end="hps_0.h2f_lw_axi_clock" />
  <connection
-   kind="interrupt"
-   version="16.1"
-   start="hps_0.f2h_irq0"
-   end="spi_0.irq">
-  <parameter name="irqNumber" value="0" />
- </connection>
- <connection
    kind="reset"
-   version="16.1"
+   version="18.1"
    start="clk_0.clk_reset"
    end="fpga_jtag_bridge.clk_reset" />
  <connection
    kind="reset"
-   version="16.1"
+   version="18.1"
    start="clk_0.clk_reset"
    end="hps_jtag_bridge.clk_reset" />
  <connection
    kind="reset"
-   version="16.1"
+   version="18.1"
    start="clk_0.clk_reset"
    end="sdram_jtag_bridge.clk_reset" />
  <connection
    kind="reset"
-   version="16.1"
+   version="18.1"
    start="clk_0.clk_reset"
    end="led_pio.reset" />
  <connection
    kind="reset"
-   version="16.1"
+   version="18.1"
    start="clk_0.clk_reset"
    end="sw_pio.reset" />
  <connection
    kind="reset"
-   version="16.1"
+   version="18.1"
    start="clk_0.clk_reset"
    end="sysid_qsys_0.reset" />
  <connection
    kind="reset"
-   version="16.1"
-   start="clk_0.clk_reset"
-   end="h2f_axi_master_bridge.reset" />
- <connection
-   kind="reset"
-   version="16.1"
+   version="18.1"
    start="clk_0.clk_reset"
    end="pb_pio.reset" />
- <connection kind="reset" version="16.1" start="clk_0.clk_reset" end="spi_0.reset" />
+ <connection
+   kind="reset"
+   version="18.1"
+   start="clk_0.clk_reset"
+   end="reg32_pio.reset" />
  <interconnectRequirement for="$system" name="qsys_mm.clockCrossingAdapter" value="HANDSHAKE" />
  <interconnectRequirement for="$system" name="qsys_mm.enableEccProtection" value="FALSE" />
  <interconnectRequirement for="$system" name="qsys_mm.insertDefaultSlave" value="FALSE" />
