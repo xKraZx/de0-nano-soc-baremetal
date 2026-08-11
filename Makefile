@@ -17,9 +17,9 @@ run:
 	xhost +local:docker
 	docker run --rm -it \
 		--privileged \
-		--device=/dev/loop0 \
 		--security-opt seccomp=unconfined \
 		-e DISPLAY=$(DISPLAY) \
+		-v /dev:/dev \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
 		-v "$(PWD):/project" \
 		$(IMAGE)
