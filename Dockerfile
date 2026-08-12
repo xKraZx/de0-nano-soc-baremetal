@@ -96,7 +96,7 @@ RUN curl -4 -fL \
     && rm -rf /tmp/libpng12 /tmp/libpng12.deb
 
 
-ENV PATH="/usr/local/bin:/opt/intelFPGA_lite/quartus/bin:/usr/local/sbin:/usr/sbin:/sbin:/usr/bin:/bin"
+ENV PATH="/usr/local/bin:/opt/intelFPGA_lite/quartus/bin:/opt/intelFPGA_lite/quartus/sopc_builder/bin/:/usr/local/sbin:/usr/sbin:/sbin:/usr/bin:/bin"
 ENV QUARTUS_ROOTDIR="/opt/intelFPGA_lite/quartus"
 
 ENV LD_PRELOAD=/lib/x86_64-linux-gnu/libudev.so.1
