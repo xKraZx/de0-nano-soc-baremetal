@@ -4,6 +4,7 @@ COMPONENTS := components
 HWLIB_DIR := $(COMPONENTS)/hwlib
 UBOOT_DIR := $(TEMP_DIR)/uboot-socfpga
 OBJDIR := $(TEMP_DIR)/obj
+HW_PRJ := de0_nano_soc
 
 UBOOT_ARCHIVE := $(COMPONENTS)/uboot_socfpga.tar.gz
 
@@ -30,6 +31,10 @@ INCLUDES := \
     -I$(HWLIB_DIR)/include/soc_cv_av/socal \
 	-I$(HWLIB_DIR)/include/safeclib \
 
+MAKROS := -DALT_FPGA_ENABLE_DMA_SUPPORT=1 \
+			-DALT_BRIDGE_PROVISION_F2S_SUPPORT \
+			-DPRINTF_UART
+
 LINKER_SCRIPT 		:= $(COMPONENTS)/cycloneV-dk-ram.ld
 MULTILIBFLAGS 		:= -mfloat-abi=softfp -mtune=cortex-a9 -mcpu=cortex-a9 -march=armv7-a
 ASFLAGS 			:=  -march=armv7-a -mcpu=cortex-a9
@@ -37,7 +42,7 @@ CFLAGS 				:= $(MULTILIBFLAGS) -g -O0 -Wall \
 							-fdata-sections -ffunction-sections \
 							$(INCLUDES) \
 						  -Dsoc_cv_av \
-						  -DPRINTF_UART
+						  $(MAKROS)
 
 LIBS := $(COMPONENTS)/libs
 
@@ -46,7 +51,8 @@ HWLIB_SRC := $(wildcard $(HWLIB_DIR)/src/safeclib/*.c) \
 			$(HWLIB_DIR)/src/utils/alt_printf.c \
 			$(wildcard $(HWLIB_DIR)/src/soc_cv_av/*.c) \
 			$(wildcard $(HWLIB_DIR)/src/hwmgr/*.c) \
-			$(wildcard $(HWLIB_DIR)/src/hwmgr/soc_cv_av/*.c)
+			$(wildcard $(HWLIB_DIR)/src/hwmgr/soc_cv_av/*.c) \
+			$(HWLIB_DIR)/src/hwmgr/soc_cv_av/alt_bridge_f2s_gnu.s
 
 SRC := $(HWLIB_SRC)\
 		./bare_metal_example.c
@@ -68,6 +74,8 @@ SPL := $(TEMP_DIR)/baremetal-spl.sfp
 ELF := $(TEMP_DIR)/$(TARGET).axf
 BIN := $(TEMP_DIR)/$(TARGET).bin
 BINMKIMAGE 	:= $(TEMP_DIR)/$(TARGET)_mk.bin
+RBF_OBJ := $(TEMP_DIR)/$(HW_PRJ).o
+RBF := $(WORK_DIR)/hw/$(HW_PRJ).rbf
 CONFIG_STAMP := $(TEMP_DIR)/.config
 QTS_STAMP := $(TEMP_DIR)/.qts
 UNTAR_STAMP := $(TEMP_DIR)/.untar
@@ -101,8 +109,8 @@ binary_file: $(BIN)
 $(BIN): $(ELF)
 	$(OC) -O binary $(ELF) $@
 
-$(ELF): $(OBJS)
-	$(LD) -L$(LIBS) -T$(LINKER_SCRIPT) $(MULTILIBFLAGS) $(OBJS) -o $@
+$(ELF): $(OBJS) $(RBF_OBJ)
+	$(LD) -L$(LIBS) -T$(LINKER_SCRIPT) $(MULTILIBFLAGS) $(OBJS) $(RBF_OBJ) -o $@
 
 $(OBJDIR)/%.o : %.c Makefile
 	mkdir -p $(@D)
@@ -111,6 +119,13 @@ $(OBJDIR)/%.o : %.c Makefile
 $(OBJDIR)/%.o: %.s Makefile
 	mkdir -p $(@D)
 	$(AS) $(ASFLAGS) -c $< -o $@
+
+$(RBF_OBJ): $(RBF)
+	$(OC) -I binary -O elf32-littlearm -B arm \
+		--redefine-sym _binary_____hw_de0_nano_soc_rbf_start=rbf_start \
+		--redefine-sym _binary_____hw_de0_nano_soc_rbf_end=rbf_end \
+		--redefine-sym _binary_____hw_de0_nano_soc_rbf_size=rbf_size \
+		$< $@
 
 #///////////
 .PHONY: spl
