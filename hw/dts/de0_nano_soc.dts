@@ -2,7 +2,7 @@
 /include/ "socfpga_cyclone5.dtsi"
 
 / {
-      model = "DE0_HPS_Example";
+      model = "de0_nano_soc";
       compatible = "altr,socfpga-cyclone5", "altr,socfpga";
 
       chosen {
@@ -26,7 +26,7 @@
       ////////////////////////////////////////////////////////////////////
       //
       // copied and adapted 
-      // from 'DE0_HPS_Example.donotuse.dts', created via make example_dts
+      // from 'de0_nano_soc.donotuse.dts', created via make example_dts
       //
       hps_0_bridges: bridge@0xc0000000 {
          compatible = "altr,bridge-16.1", "simple-bus";

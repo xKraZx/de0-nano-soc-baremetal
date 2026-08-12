@@ -1,4 +1,4 @@
-PRJ=DE0_HPS_Example
+PRJ=de0_nano_soc
 
 QPF := $(PRJ).qpf
 QSF := $(PRJ).qsys
@@ -16,7 +16,7 @@ SINFO_FILE 		:= dts/$(PRJ)_system_info.xml
 DTB_FILE 		:= $(PRJ).dtb
 RBF_FILE 		:= $(PRJ).rbf
 H_DIR 			:= qsys_headers
-CDF_FILE 		:= DE0_HPS_Example.cdf   
+CDF_FILE 		:= $(PRJ).cdf   
 SOPC2DTS_ARGS += --bridge-removal all --clocks
 
 CMD_MKDIR := mkdir -p
@@ -72,7 +72,7 @@ device_tree_edit:
 	sopc2dts -i $(SOPC_FILE) --board $(BINFO_FILE) --board $(SINFO_FILE) --gui
 
 $(DTS_FILE2): $(SOPC_FILE) $(BINFO_FILE) $(SINFO_FILE)
-	sopc2dts -v -i $(SOPC_FILE) -o $(DTS_FILE2) $(OPC2DTS_ARGS) --board $(BINFO_FILE) --board $(SINFO_FILE)
+	sopc2dts -v -i $(SOPC_FILE) -o $(DTS_FILE2) $(SOPC2DTS_ARGS) --board $(BINFO_FILE) --board $(SINFO_FILE)
 
 $(H_DIR)/$(PRJ).h: $(SOPC_FILE)
 	$(CMD_MKDIR) $(H_DIR)
@@ -103,7 +103,7 @@ clean:
 	        c5_pin_model_dump.txt \
 	        hps_sdram_p0_all_pins.txt \
 	        hps_sdram_p0_summary.csv \
-	        DE0_HPS_Example_assignment_defaults.qdf \
+	        $(PRJ)_assignment_defaults.qdf \
 			.qsys_edit \
 	  		$(QSD) \
 			$(SOF_FILE) \

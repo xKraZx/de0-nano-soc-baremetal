@@ -23,7 +23,7 @@ hw/db/
 hw/incremental_db/
 hw/qsys_headers/
 hw/hps_isw_handoff/
-hw/DE0_HPS_Example/
+hw/de0_nano_soc/
 
 # Misc
 hw/c5_pin_model_dump.txt
