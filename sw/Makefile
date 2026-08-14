@@ -143,9 +143,15 @@ $(MKIMAGE): $(UNTAR_STAMP) $(CONFIG_STAMP)
 config: $(CONFIG_STAMP)
 
 UBOOT_CONFIG := socfpga_de0_nano_soc_defconfig
+CONFIG_OVERRIDE := $(COMPONENTS)/$(TARGET).config
 
 $(CONFIG_STAMP): $(UNTAR_STAMP)
 	make -C $(UBOOT_DIR) $(UBOOT_CONFIG)
+	cd $(UBOOT_DIR) && \
+		./scripts/kconfig/merge_config.sh \
+			.config \
+			$(CURDIR)/$(CONFIG_OVERRIDE)
+	make -C $(UBOOT_DIR) olddefconfig
 	@touch $@
 #///////////
 .PHONY: generate-qts
