@@ -37,6 +37,7 @@ MAKROS := -DALT_FPGA_ENABLE_DMA_SUPPORT=1 \
 
 LINKER_SCRIPT 		:= $(COMPONENTS)/cycloneV-dk-ram.ld
 MULTILIBFLAGS 		:= -mfloat-abi=softfp -mtune=cortex-a9 -mcpu=cortex-a9 -march=armv7-a
+LDFLAGS				:= -Wl,--gc-sections
 ASFLAGS 			:=  -march=armv7-a -mcpu=cortex-a9
 CFLAGS 				:= $(MULTILIBFLAGS) -g -O0 -Wall \
 							-fdata-sections -ffunction-sections \
@@ -110,7 +111,7 @@ $(BIN): $(ELF)
 	$(OC) -O binary $(ELF) $@
 
 $(ELF): $(OBJS) $(RBF_OBJ)
-	$(LD) -L$(LIBS) -T$(LINKER_SCRIPT) $(MULTILIBFLAGS) $(OBJS) $(RBF_OBJ) -o $@
+	$(LD) -L$(LIBS) -T$(LINKER_SCRIPT) $(MULTILIBFLAGS) $(OBJS) $(LDFLAGS) $(RBF_OBJ) -o $@
 
 $(OBJDIR)/%.o : %.c Makefile
 	mkdir -p $(@D)
