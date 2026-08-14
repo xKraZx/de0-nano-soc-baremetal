@@ -97,12 +97,9 @@ $(BAREMETAL_WITH_SPL): $(SPL) $(BINMKIMAGE)
 .PHONY: binary_mk
 binary_mk: $(BINMKIMAGE)
 
-$(BINMKIMAGE): $(BIN)
-	$(MKIMAGE) -A arm -O u-boot  -T standalone -C none -a 0x00100000 -e 0x00100000 -n bare-metal-example  -d $(BIN) $(BINMKIMAGE)
-
-#$(BINMKIMAGE): $(BIN) $(ELF) $(MKIMAGE)
-#	ENTRYPOINT=$$($(RE) -h $(ELF) | awk '/Entry point address/ {print $$4}'); \
-#	$(MKIMAGE) -A arm -O u-boot  -T standalone -C none -a 0x00100000 -e $$ENTRYPOINT -n bare-metal-example  -d $(BIN) $(BINMKIMAGE)
+$(BINMKIMAGE): $(BIN) $(ELF) $(MKIMAGE)
+	ENTRYPOINT=$$($(RE) -h $(ELF) | awk '/Entry point address/ {print $$4}'); \
+	$(MKIMAGE) -A arm -O u-boot  -T standalone -C none -a 0x00100000 -e $$ENTRYPOINT -n bare-metal-example  -d $(BIN) $(BINMKIMAGE)
 
 .PHONY: binary_file
 binary_file: $(BIN)
