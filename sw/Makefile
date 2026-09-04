@@ -16,6 +16,7 @@ ARCH := arm
 BSP_GENERATOR := $(UBOOT_DIR)/arch/arm/mach-socfpga/cv_bsp_generator/cv_bsp_generator.py
 MKIMAGE := $(UBOOT_DIR)/tools/mkimage
 
+CXX					:= $(CROSS_COMPILE)g++
 CC 					:= $(CROSS_COMPILE)gcc
 LD 					:= $(CROSS_COMPILE)g++
 NM 					:= $(CROSS_COMPILE)nm
@@ -31,7 +32,8 @@ INCLUDES := \
     -I$(HWLIB_DIR)/include/soc_cv_av/socal \
 	-I$(HWLIB_DIR)/include/safeclib \
 
-MAKROS := -DALT_FPGA_ENABLE_DMA_SUPPORT=1 \
+DEFINES	:= -Dsoc_cv_av \
+			-DALT_FPGA_ENABLE_DMA_SUPPORT=1 \
 			-DALT_BRIDGE_PROVISION_F2S_SUPPORT \
 			-DPRINTF_UART
 
@@ -42,8 +44,12 @@ ASFLAGS 			:=  -march=armv7-a -mcpu=cortex-a9
 CFLAGS 				:= $(MULTILIBFLAGS) -g -O0 -Wall \
 							-fdata-sections -ffunction-sections \
 							$(INCLUDES) \
-						  -Dsoc_cv_av \
-						  $(MAKROS)
+							$(DEFINES)
+CXXFLAGS			:= $(INCLUDES) \
+						$(MULTILIBFLAGS) \
+						$(DEFINES) \
+						-g -O0 -Wall -Wextra -std=c++17 \
+						-fdata-sections -ffunction-sections
 
 LIBS := $(COMPONENTS)/libs
 
@@ -56,11 +62,13 @@ HWLIB_SRC := $(wildcard $(HWLIB_DIR)/src/safeclib/*.c) \
 			$(HWLIB_DIR)/src/hwmgr/soc_cv_av/alt_bridge_f2s_gnu.s
 
 SRC := $(HWLIB_SRC)\
-		./bare_metal_example.c
+		./bare_metal_example.cpp
 
-OBJS := $(patsubst %.c,%.o,$(SRC)) 
-OBJS := $(patsubst %.s,%.o,$(OBJS)) 
-OBJS := $(patsubst %.o,$(OBJDIR)/%.o,$(OBJS)) 
+OBJS := $(SRC)
+OBJS := $(OBJS:.c=.o)
+OBJS := $(OBJS:.cpp=.o)
+OBJS := $(OBJS:.s=.o)
+OBJS := $(addprefix $(OBJDIR)/,$(OBJS))
 
 $(HWLIB_SRC):
 	$(shell cp -r $(HWLIB_ROOT) $(HWLIB_DIR) )
@@ -109,6 +117,10 @@ $(BIN): $(ELF)
 
 $(ELF): $(OBJS) $(RBF_OBJ)
 	$(LD) -L$(LIBS) -T$(LINKER_SCRIPT) $(MULTILIBFLAGS) $(OBJS) $(LDFLAGS) $(RBF_OBJ) -o $@
+
+$(OBJDIR)/%.o : %.cpp Makefile
+	mkdir -p $(@D)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 $(OBJDIR)/%.o : %.c Makefile
 	mkdir -p $(@D)

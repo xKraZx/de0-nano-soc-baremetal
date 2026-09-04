@@ -1,3 +1,4 @@
+extern "C" {
 #include <alt_printf.h>
 #include <alt_watchdog.h>
 #include <hwlib.h>
@@ -6,6 +7,7 @@
 #include <alt_fpga_manager.h>
 #include <socal.h>
 #include <alt_dma.h>
+}
 
 static ALT_STATUS_CODE fpga_load(const void *fpga_image, size_t fpga_image_size)
 {
