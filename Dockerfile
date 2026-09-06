@@ -98,6 +98,7 @@ RUN curl -4 -fL \
 
 ENV PATH="/usr/local/bin:/opt/intelFPGA_lite/quartus/bin:/opt/intelFPGA_lite/quartus/sopc_builder/bin/:/usr/local/sbin:/usr/sbin:/sbin:/usr/bin:/bin"
 ENV QUARTUS_ROOTDIR="/opt/intelFPGA_lite/quartus"
+ENV PROJECT_ROOT="/project"
 
 ENV LD_PRELOAD=/lib/x86_64-linux-gnu/libudev.so.1
 
