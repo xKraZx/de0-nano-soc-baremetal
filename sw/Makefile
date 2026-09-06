@@ -3,6 +3,7 @@ TEMP_DIR := temp
 COMPONENTS := components
 HWLIB_DIR := $(COMPONENTS)/hwlib
 UBOOT_DIR := $(TEMP_DIR)/uboot-socfpga
+SRC_DIR := src
 OBJDIR := $(TEMP_DIR)/obj
 HW_PRJ := de0_nano_soc
 
@@ -30,7 +31,10 @@ INCLUDES := \
     -I$(HWLIB_DIR)/include \
     -I$(HWLIB_DIR)/include/soc_cv_av \
     -I$(HWLIB_DIR)/include/soc_cv_av/socal \
-	-I$(HWLIB_DIR)/include/safeclib \
+	-I$(HWLIB_DIR)/include/safeclib
+
+SRC_INCLUDES := $(shell find $(SRC_DIR) -type d)
+SRC_INCLUDES := $(addprefix -I,$(SRC_INCLUDES))
 
 DEFINES	:= -Dsoc_cv_av \
 			-DALT_FPGA_ENABLE_DMA_SUPPORT=1 \
@@ -46,10 +50,12 @@ CFLAGS 				:= $(MULTILIBFLAGS) -g -O0 -Wall \
 							$(INCLUDES) \
 							$(DEFINES)
 CXXFLAGS			:= $(INCLUDES) \
+						$(SRC_INCLUDES) \
 						$(MULTILIBFLAGS) \
 						$(DEFINES) \
 						-g -O0 -Wall -Wextra -std=c++17 \
-						-fdata-sections -ffunction-sections
+						-fdata-sections -ffunction-sections \
+						-MMD -MP
 
 LIBS := $(COMPONENTS)/libs
 
@@ -62,13 +68,18 @@ HWLIB_SRC := $(wildcard $(HWLIB_DIR)/src/safeclib/*.c) \
 			$(HWLIB_DIR)/src/hwmgr/soc_cv_av/alt_bridge_f2s_gnu.s
 
 SRC := $(HWLIB_SRC)\
-		./bare_metal_example.cpp
+		$(shell find $(SRC_DIR) -type f -name '*.cpp') \
+		./main.cpp
 
 OBJS := $(SRC)
 OBJS := $(OBJS:.c=.o)
 OBJS := $(OBJS:.cpp=.o)
 OBJS := $(OBJS:.s=.o)
 OBJS := $(addprefix $(OBJDIR)/,$(OBJS))
+
+DEPS := $(OBJS:.o=.d)
+
+-include $(DEPS)
 
 $(HWLIB_SRC):
 	$(shell cp -r $(HWLIB_ROOT) $(HWLIB_DIR) )
