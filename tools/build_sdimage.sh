@@ -29,6 +29,6 @@ make -C $PROJECT_ROOT/sw all
 echo "Creating SD image..."
 $SUDO python3 $PROJECT_ROOT/tools/make_sdimage_p3.py \
   -f \
-  -P sw/temp/baremetal-with-spl.sfp,num=1,format=raw,size=10M,type=A2 \
+  -P sw/build/baremetal-with-spl.sfp,num=1,format=raw,size=10M,type=A2 \
   -s 20M \
   -n sdcard.img

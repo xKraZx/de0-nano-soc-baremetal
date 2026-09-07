@@ -30,5 +30,5 @@ hw/c5_pin_model_dump.txt
 hw/hps_sdram_p0_all_pins.txt
 hw/hps_sdram_p0_summary.csv
 hw/.qsys_edit
-sw/temp/
+sw/build/
 sdcard.img

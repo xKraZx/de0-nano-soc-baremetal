@@ -1,15 +1,14 @@
-WORK_DIR := ../
-TEMP_DIR := temp
+BUILD_DIR := build
 COMPONENTS := components
 HWLIB_DIR := $(COMPONENTS)/hwlib
-UBOOT_DIR := $(TEMP_DIR)/uboot-socfpga
+UBOOT_DIR := $(BUILD_DIR)/uboot-socfpga
 SRC_DIR := src
-OBJDIR := $(TEMP_DIR)/obj
-HW_PRJ := de0_nano_soc
+OBJ_DIR := $(BUILD_DIR)/obj
+HW_PRJ_NAME := de0_nano_soc
 
 UBOOT_ARCHIVE := $(COMPONENTS)/uboot_socfpga.tar.gz
 
-TARGET 	:= baremetal_app
+TARGET 	:= $(HW_PRJ_NAME)_baremetal
 
 CROSS_COMPILE := arm-none-eabi-
 ARCH := arm
@@ -75,7 +74,7 @@ OBJS := $(SRC)
 OBJS := $(OBJS:.c=.o)
 OBJS := $(OBJS:.cpp=.o)
 OBJS := $(OBJS:.s=.o)
-OBJS := $(addprefix $(OBJDIR)/,$(OBJS))
+OBJS := $(addprefix $(OBJ_DIR)/,$(OBJS))
 
 DEPS := $(OBJS:.o=.d)
 
@@ -83,28 +82,28 @@ DEPS := $(OBJS:.o=.d)
 
 $(HWLIB_SRC):
 	$(shell cp -r $(HWLIB_ROOT) $(HWLIB_DIR) )
-	$(shell mkdir -p $(OBJDIR)/$(HWLIB_DIR)/src/utils)
-	$(shell mkdir -p $(OBJDIR)/$(HWLIB_DIR)/src/hwmgr/soc_cv_av)
-	$(shell mkdir -p $(OBJDIR)/$(HWLIB_DIR)/src/safeclib)
+	$(shell mkdir -p $(OBJ_DIR)/$(HWLIB_DIR)/src/utils)
+	$(shell mkdir -p $(OBJ_DIR)/$(HWLIB_DIR)/src/hwmgr/soc_cv_av)
+	$(shell mkdir -p $(OBJ_DIR)/$(HWLIB_DIR)/src/safeclib)
 
 #///////
 IMG := sdcard.img
-BAREMETAL_WITH_SPL := $(TEMP_DIR)/baremetal-with-spl.sfp
-SPL := $(TEMP_DIR)/baremetal-spl.sfp
-ELF := $(TEMP_DIR)/$(TARGET).axf
-BIN := $(TEMP_DIR)/$(TARGET).bin
-BINMKIMAGE 	:= $(TEMP_DIR)/$(TARGET)_mk.bin
-RBF_OBJ := $(TEMP_DIR)/$(HW_PRJ).o
-RBF := $(WORK_DIR)/hw/$(HW_PRJ).rbf
-CONFIG_STAMP := $(TEMP_DIR)/.config
-QTS_STAMP := $(TEMP_DIR)/.qts
-UNTAR_STAMP := $(TEMP_DIR)/.untar
+BAREMETAL_WITH_SPL := $(BUILD_DIR)/baremetal-with-spl.sfp
+SPL := $(BUILD_DIR)/baremetal-spl.sfp
+ELF := $(BUILD_DIR)/$(TARGET).axf
+BIN := $(BUILD_DIR)/$(TARGET).bin
+BINMKIMAGE 	:= $(BUILD_DIR)/$(TARGET)_mk.bin
+RBF_OBJ := $(BUILD_DIR)/$(HW_PRJ_NAME).o
+RBF := $(PROJECT_ROOT)/hw/$(HW_PRJ_NAME).rbf
+CONFIG_STAMP := $(BUILD_DIR)/.config
+QTS_STAMP := $(BUILD_DIR)/.qts
+UNTAR_STAMP := $(BUILD_DIR)/.untar
 #///////
 .PHONY: all
 all: $(BAREMETAL_WITH_SPL)
 
-SPL_PAD := $(TEMP_DIR)/uboot-spl-pad.sfp
-SPLX4   := $(TEMP_DIR)/uboot-splx4.sfp
+SPL_PAD := $(BUILD_DIR)/uboot-spl-pad.sfp
+SPLX4   := $(BUILD_DIR)/uboot-splx4.sfp
 
 $(BAREMETAL_WITH_SPL): $(SPL) $(BINMKIMAGE)
 	$(OC) -I binary -O binary --gap-fill=0x0 \
@@ -129,23 +128,23 @@ $(BIN): $(ELF)
 $(ELF): $(OBJS) $(RBF_OBJ)
 	$(LD) -L$(LIBS) -T$(LINKER_SCRIPT) $(MULTILIBFLAGS) $(OBJS) $(LDFLAGS) $(RBF_OBJ) -o $@
 
-$(OBJDIR)/%.o : %.cpp Makefile
+$(OBJ_DIR)/%.o : %.cpp Makefile
 	mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-$(OBJDIR)/%.o : %.c Makefile
+$(OBJ_DIR)/%.o : %.c Makefile
 	mkdir -p $(@D)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(OBJDIR)/%.o: %.s Makefile
+$(OBJ_DIR)/%.o: %.s Makefile
 	mkdir -p $(@D)
 	$(AS) $(ASFLAGS) -c $< -o $@
 
 $(RBF_OBJ): $(RBF)
 	$(OC) -I binary -O elf32-littlearm -B arm \
-		--redefine-sym _binary_____hw_de0_nano_soc_rbf_start=rbf_start \
-		--redefine-sym _binary_____hw_de0_nano_soc_rbf_end=rbf_end \
-		--redefine-sym _binary_____hw_de0_nano_soc_rbf_size=rbf_size \
+		--redefine-sym _binary__project_hw_de0_nano_soc_rbf_start=rbf_start \
+		--redefine-sym _binary__project_hw_de0_nano_soc_rbf_end=rbf_end \
+		--redefine-sym _binary__project_hw_de0_nano_soc_rbf_size=rbf_size \
 		$< $@
 
 #///////////
@@ -181,7 +180,7 @@ $(CONFIG_STAMP): $(UNTAR_STAMP)
 generate-qts: $(QTS_STAMP)
 
 $(QTS_STAMP): $(UNTAR_STAMP)
-	python3 $(BSP_GENERATOR) -i $(WORK_DIR)/hw/hps_isw_handoff/*/ -o $(UBOOT_DIR)/board/altera/cyclone5-socdk/qts
+	python3 $(BSP_GENERATOR) -i $(PROJECT_ROOT)/hw/hps_isw_handoff/*/ -o $(UBOOT_DIR)/board/altera/cyclone5-socdk/qts
 	@touch $@
 #///////////
 .PHONY: unpack-uboot
@@ -196,4 +195,4 @@ $(UNTAR_STAMP): $(UBOOT_ARCHIVE)
 
 .PHONY: clean
 clean:
-	rm -rf $(TEMP_DIR)
+	rm -rf $(BUILD_DIR)
