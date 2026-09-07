@@ -2,7 +2,7 @@
 IMAGE := de0-nano-soc-baremetal
 CONTAINER := de0-nano-soc-baremetal
 
-.PHONY: all build run shell clean
+.PHONY: all build run shell sdimage clean
 
 all: build
 
@@ -26,6 +26,9 @@ run:
 	xhost -local:docker
 
 shell: run
+
+sdimage:
+	$(PROJECT_ROOT)/tools/build_sdimage.sh
 
 clean:
 	-docker rm -f $(CONTAINER)
