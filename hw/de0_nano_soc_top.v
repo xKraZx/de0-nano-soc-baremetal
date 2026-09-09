@@ -90,7 +90,6 @@ wire h2f_reset;
 wire warm_reset_hs_ack;
 wire warm_reset_hs_req;
 
-wire [31:0] reg_loop;
 wire [6:0] led;
 reg led_int;
 reg [25:0] counter;
@@ -207,8 +206,6 @@ de0_nano_soc u0 (
         .led_out_export                  ( led                 ), //    led_out.export
         .sw_in_export                    ( SW                  ), //    sw_in.export
         .pb_in_export                    ( KEY                 ), //    pb_in.export
-		  .reg_32_external_connection_in_port (reg_loop),
-		  .reg_32_external_connection_out_port (reg_loop),
 
         .warm_reset_handshake_h2f_pending_rst_req_n ( ~warm_reset_hs_req ), // h2f_pending_rst_req_n
         .warm_reset_handshake_f2h_pending_rst_ack_n ( ~warm_reset_hs_ack )  // .f2h_pending_rst_ack_n
