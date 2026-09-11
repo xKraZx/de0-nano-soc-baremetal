@@ -41,7 +41,7 @@ run:
 		$(JAVA_ARGS) \
 		$(X11_ARGS) \
 		-v "$(PWD):/project" \
-		$(IMAGE)
+		$(IMAGE) || true
 	$(XHOST_RESET_CMD)
 
 shell: run
