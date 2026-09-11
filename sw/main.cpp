@@ -5,38 +5,34 @@ extern "C" {
 
 #include "fpga_image.hpp"
 #include "fpga_loader.hpp"
-#include "h2f_bridge_demo.hpp"
+#include "uart.hpp"
+#include "benchmark.hpp"
+#include "benchmarks.hpp"
 
-
-int main( void )
+int main()
 {
+    printf("INFO: ENTERED MAIN\n");
     alt_wdog_uninit();
 
     const FpgaImage &image = fpga_image_get();
 
-    printf("INFO: FPGA image at %p, size = %u bytes.\n",
+    printf("INFO: FPGA image at %p, size = %u bytes.\n\n",
             image.data, static_cast<unsigned int>(image.size));
 
     if (fpga_load(image.data, image.size) != ALT_E_SUCCESS) {
         printf("ERROR: FPGA loading failed.\n");
-        goto error;
     }
 
     printf("INFO: Initialization complete.\n\n");
 
-    if (h2f_bridge_demo_init() != ALT_E_SUCCESS) {
-        printf("ERROR: H2F bridge demo initialization failed.\n");
-        goto error;
+    //Application app;
+    //app.init();
+    printf("Hell");
+
+    while (true)
+    {
+        //app.process();
     }
-
-    if (h2f_bridge_demo_register_access() != ALT_E_SUCCESS) {
-        printf("ERROR: H2F bridge register demo failed.\n");
-        goto error;
-    }
-
-error:
-
-    while(1);
 
     return 0;
 }

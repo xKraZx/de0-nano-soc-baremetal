@@ -42,7 +42,7 @@ DEFINES	:= -Dsoc_cv_av \
 
 LINKER_SCRIPT 		:= $(COMPONENTS)/cycloneV-dk-ram.ld
 MULTILIBFLAGS 		:= -mfloat-abi=softfp -mtune=cortex-a9 -mcpu=cortex-a9 -march=armv7-a
-LDFLAGS				:= -Wl,--gc-sections
+LDFLAGS				:= -Wl,--gc-sections,-Map=$(BUILD_DIR)/$(TARGET).map
 ASFLAGS 			:=  -march=armv7-a -mcpu=cortex-a9
 CFLAGS 				:= $(MULTILIBFLAGS) -g -O0 -Wall \
 							-fdata-sections -ffunction-sections \
