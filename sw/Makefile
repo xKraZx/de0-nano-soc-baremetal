@@ -41,9 +41,9 @@ DEFINES	:= -Dsoc_cv_av \
 			-DPRINTF_UART
 
 LINKER_SCRIPT 		:= $(COMPONENTS)/cycloneV-dk-ram.ld
-MULTILIBFLAGS 		:= -mfloat-abi=softfp -mtune=cortex-a9 -mcpu=cortex-a9 -march=armv7-a
+MULTILIBFLAGS 		:= -mfloat-abi=softfp -mcpu=cortex-a9
 LDFLAGS				:= -Wl,--gc-sections
-ASFLAGS 			:=  -march=armv7-a -mcpu=cortex-a9
+ASFLAGS 			:= -mcpu=cortex-a9
 CFLAGS 				:= $(MULTILIBFLAGS) -g -O0 -Wall \
 							-fdata-sections -ffunction-sections \
 							$(INCLUDES) \
