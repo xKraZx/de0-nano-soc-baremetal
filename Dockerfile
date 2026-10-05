@@ -1,5 +1,5 @@
 
-FROM ubuntu:18.04 AS quartus
+FROM ubuntu:20.04 AS quartus
 
 ENV DEBIAN_FRONTEND=noninteractive
 ARG QUARTUS_URL="https://download.altera.com/akdlm/software/acdsinst/18.1std/625/ib_tar/Quartus-lite-18.1.0.625-linux.tar"
@@ -44,7 +44,7 @@ RUN aria2c \
         /tmp/Quartus-lite-18.1.0.625-linux.tar
 
 
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
