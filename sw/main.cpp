@@ -1,8 +1,6 @@
-extern "C" {
+
 #include <alt_printf.h>
 #include <alt_watchdog.h>
-}
-
 #include "fpga_image.hpp"
 #include "fpga_loader.hpp"
 #include "h2f_bridge_demo.hpp"

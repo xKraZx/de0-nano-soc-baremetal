@@ -36,6 +36,11 @@
 #include <stdarg.h>
 #include <inttypes.h>
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif  /* __cplusplus */
+
 typedef struct ALT_PRINTF_MEM_INFO_s
 {
   void (*putc_function)(char pchar,FILE * info);
@@ -83,5 +88,9 @@ int alt_vfprintf(FILE *stream, const char *format, va_list args);
 #endif /* PRINTF_HOST */
 
 void alt_log_done(FILE *);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* ALT_PRINTF_H */
