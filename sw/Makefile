@@ -40,9 +40,9 @@ DEFINES	:= -Dsoc_cv_av \
 			-DALT_BRIDGE_PROVISION_F2S_SUPPORT \
 			-DPRINTF_UART
 
-LINKER_SCRIPT 		:= $(COMPONENTS)/cycloneV-dk-ram.ld
-MULTILIBFLAGS 		:= -mfloat-abi=softfp -mcpu=cortex-a9
-LDFLAGS				:= -Wl,--gc-sections
+LINKER_SCRIPT 		:= $(COMPONENTS)/$(TARGET).ld
+MULTILIBFLAGS 		:= -mfloat-abi=softfp -mcpu=cortex-a9 -mfpu=neon
+LDFLAGS				:= -Wl,--gc-sections --specs=nosys.specs
 ASFLAGS 			:= -mcpu=cortex-a9
 CFLAGS 				:= $(MULTILIBFLAGS) -g -O0 -Wall \
 							-fdata-sections -ffunction-sections \
@@ -61,6 +61,7 @@ LIBS := $(COMPONENTS)/libs
 HWLIB_SRC := $(wildcard $(HWLIB_DIR)/src/safeclib/*.c) \
 			$(HWLIB_DIR)/src/utils/alt_p2uart.c \
 			$(HWLIB_DIR)/src/utils/alt_printf.c \
+			$(HWLIB_DIR)/src/utils/alt_base.c \
 			$(wildcard $(HWLIB_DIR)/src/soc_cv_av/*.c) \
 			$(wildcard $(HWLIB_DIR)/src/hwmgr/*.c) \
 			$(wildcard $(HWLIB_DIR)/src/hwmgr/soc_cv_av/*.c) \
