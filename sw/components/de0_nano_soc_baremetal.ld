@@ -8,7 +8,7 @@ MEMORY
 {
     boot_rom (rx)  : ORIGIN = 0xfffd0000, LENGTH = 64K
     oc_ram   (rwx) : ORIGIN = 0xffff0000, LENGTH = 64K
-    ram      (rwx) : ORIGIN = 0x00100000, LENGTH = 1023M
+    ram      (rwx) : ORIGIN = 0x00100000, LENGTH = 1007M
 }
 
 SECTIONS
@@ -184,6 +184,11 @@ SECTIONS
     {
         __data_start = .;
 
+        . = ALIGN(32);
+        *de0_nano_soc.o(.data)
+        *de0_nano_soc.o(.rodata)
+        . = ALIGN(8);
+
         *(.data)
         *(.data.*)
         *(.gnu.linkonce.d.*)
@@ -239,6 +244,13 @@ SECTIONS
 
     _stack = ORIGIN(ram) + LENGTH(ram);
 
+    PROVIDE(__stack = _stack);
+
+    _stack_end = _stack - 10M;
+    PROVIDE(__stack_end = _stack_end);
+
+    _heap_limit = _stack_end;
+    PROVIDE(__heap_limit = _heap_limit);
 
     /*
      * Debug information

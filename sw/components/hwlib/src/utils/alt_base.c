@@ -31,7 +31,7 @@
 ******************************************************************************/
 
 __asm__(".section .vectors, \"ax\";"
-".extern;"
+".extern _stack;"
 ".global lowlevel_init;"
 ".global _socfpga_main;"
 "lowlevel_init:"
@@ -45,5 +45,8 @@ __asm__(".section .vectors, \"ax\";"
 "	bx LR;"
 "_socfpga_main:"
 "	bl lowlevel_init;"
+"   ldr r0, =_stack;"
+"   bic r0, r0, #7;"
+"   mov sp, r0;"
 "	b _mainCRTStartup;"
 );

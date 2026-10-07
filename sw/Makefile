@@ -42,7 +42,7 @@ DEFINES	:= -Dsoc_cv_av \
 
 LINKER_SCRIPT 		:= $(COMPONENTS)/$(TARGET).ld
 MULTILIBFLAGS 		:= -mfloat-abi=softfp -mcpu=cortex-a9 -mfpu=neon
-LDFLAGS				:= -Wl,--gc-sections --specs=nosys.specs
+LDFLAGS				:= -Wl,--gc-sections,-Map=$(BUILD_DIR)/$(TARGET).map --specs=nosys.specs -Wl,--defsym=__stack=_stack
 ASFLAGS 			:= -mcpu=cortex-a9
 CFLAGS 				:= $(MULTILIBFLAGS) -g -O0 -Wall \
 							-fdata-sections -ffunction-sections \
@@ -54,6 +54,7 @@ CXXFLAGS			:= $(INCLUDES) \
 						$(DEFINES) \
 						-g -O0 -Wall -Wextra -std=c++17 \
 						-fdata-sections -ffunction-sections \
+						-fno-exceptions -fno-rtti \
 						-MMD -MP
 
 LIBS := $(COMPONENTS)/libs
@@ -127,7 +128,7 @@ $(BIN): $(ELF)
 	$(OC) -O binary $(ELF) $@
 
 $(ELF): $(OBJS) $(RBF_OBJ)
-	$(LD) -L$(LIBS) -T$(LINKER_SCRIPT) $(MULTILIBFLAGS) $(OBJS) $(LDFLAGS) $(RBF_OBJ) -o $@
+	$(LD) $(LDFLAGS) -L$(LIBS) -T$(LINKER_SCRIPT) $(MULTILIBFLAGS) $(OBJS) $(RBF_OBJ) -o $@
 
 $(OBJ_DIR)/%.o : %.cpp Makefile
 	mkdir -p $(@D)
